@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Golden Gutter — Dashboard de Metas 2026</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+<style>
+:root{--gold:#C9A84C;--gold-l:#F0C84A;--gold-d:#8B6914;--navy:#080A11;--navy2:#0E1120;--panel:#141829;--border:rgba(201,168,76,.28);--text:#F2ECD8;--muted:#9A9080;--green:#4CAF7A;--red:#D95F5F;--amber:#E8B84A;
+/* Meta palette */
+--meta-min:#E85555;--meta-bas:#F0CC4A;--meta-mst:#4CC87A;--meta-meg:#C9A84C;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Lato',sans-serif;background:var(--navy);color:var(--text);min-height:100vh;overflow-x:hidden;}
+body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellipse 70% 50% at 85% 5%,rgba(201,168,76,.06) 0%,transparent 60%),radial-gradient(ellipse 50% 40% at 5% 90%,rgba(201,168,76,.04) 0%,transparent 60%);pointer-events:none;z-index:0;}
+
+header{background:linear-gradient(180deg,#040508 0%,#090C16 100%);border-bottom:1px solid var(--border);padding:18px 0;position:sticky;top:0;z-index:200;box-shadow:0 4px 40px rgba(0,0,0,.7);}
+.hi{max-width:1440px;margin:0 auto;padding:0 28px;display:flex;align-items:center;justify-content:space-between;gap:20px;}
+.logo{display:flex;align-items:center;gap:13px;}
+.brand h1{font-family:'Cinzel',serif;font-size:1.35rem;font-weight:700;letter-spacing:.1em;background:linear-gradient(135deg,#C9A84C,#F0C84A,#C9A84C);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.brand p{font-size:.72rem;letter-spacing:.22em;text-transform:uppercase;color:var(--muted);margin-top:3px;}
+.hw{background:rgba(201,168,76,.1);border:1px solid var(--border);border-radius:7px;padding:8px 16px;text-align:right;}
+.hw .l{font-size:.68rem;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);}
+.hw .v{font-family:'Cinzel',serif;font-size:.95rem;color:var(--gold-l);}
+
+.tabs-sticky{background:var(--navy2);border-bottom:1px solid var(--border);position:sticky;top:67px;z-index:150;}
+.tbar{max-width:1440px;margin:0 auto;padding:0 28px;display:flex;}
+.tbtn{padding:15px 26px;font-family:'Cinzel',serif;font-size:.8rem;letter-spacing:.12em;text-transform:uppercase;background:transparent;border:none;color:var(--muted);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;transition:all .2s;}
+.tbtn:hover{color:var(--gold);}
+.tbtn.active{color:var(--gold-l);border-bottom-color:var(--gold);}
+
+.wrap{max-width:1440px;margin:0 auto;padding:28px 28px 48px;position:relative;z-index:1;}
+.tpanel{display:none;} .tpanel.active{display:block;}
+
+/* FILTER */
+.fbar{background:var(--panel);border:1px solid var(--border);border-radius:9px;padding:18px 22px;margin-bottom:26px;}
+.flbl{font-size:.7rem;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);margin-bottom:10px;}
+.chips{display:flex;flex-wrap:wrap;gap:7px;}
+.chip{padding:6px 15px;font-size:.82rem;background:transparent;border:1px solid rgba(201,168,76,.25);border-radius:20px;color:var(--muted);cursor:pointer;transition:all .17s;user-select:none;}
+.chip:hover{border-color:var(--gold);color:var(--gold);}
+.chip.sel{background:rgba(201,168,76,.18);border-color:var(--gold);color:var(--gold-l);font-weight:700;}
+.cbtn{padding:6px 15px;font-size:.8rem;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.15);border-radius:20px;color:var(--muted);cursor:pointer;transition:all .17s;}
+.cbtn:hover{border-color:var(--gold);color:var(--gold);}
+
+/* SEC */
+.sec{font-family:'Cinzel',serif;font-size:.72rem;letter-spacing:.32em;text-transform:uppercase;color:var(--gold);margin-bottom:14px;display:flex;align-items:center;gap:10px;}
+.sec::after{content:'';flex:1;height:1px;background:var(--border);}
+
+/* KPI */
+.kgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:28px;}
+@media(max-width:920px){.kgrid{grid-template-columns:repeat(2,1fr);}}
+@media(max-width:500px){.kgrid{grid-template-columns:1fr;}}
+.kcard{background:var(--panel);border:1px solid var(--border);border-radius:9px;padding:20px;position:relative;overflow:hidden;transition:border-color .2s;}
+.kcard::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--gold),transparent);opacity:.55;}
+.kcard:hover{border-color:rgba(201,168,76,.5);}
+.klbl{font-size:.68rem;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);margin-bottom:9px;}
+.kval{font-family:'Cinzel',serif;font-size:1.9rem;font-weight:700;color:var(--gold-l);line-height:1;margin-bottom:8px;}
+.ksub{font-size:.8rem;color:var(--muted);display:flex;align-items:center;gap:7px;flex-wrap:wrap;}
+.tag{font-size:.7rem;font-weight:700;padding:3px 10px;border-radius:20px;}
+.tg{background:rgba(76,175,122,.2);color:var(--green);}
+.tr{background:rgba(217,95,95,.2);color:var(--red);}
+.ta{background:rgba(232,184,74,.2);color:var(--amber);}
+.pw{margin-top:11px;}
+.pr{display:flex;justify-content:space-between;font-size:.72rem;color:var(--muted);margin-bottom:5px;}
+.pb{height:5px;background:rgba(255,255,255,.08);border-radius:10px;overflow:hidden;}
+.pf{height:100%;border-radius:10px;background:linear-gradient(90deg,var(--gold-d),var(--gold-l));transition:width .7s ease;}
+.pf.over{background:linear-gradient(90deg,#3A8A5A,var(--green));}
+.pf.warn{background:linear-gradient(90deg,#C08020,var(--amber));}
+
+/* SELLERS */
+.sgrid{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:28px;}
+@media(max-width:780px){.sgrid{grid-template-columns:1fr;}}
+.sc{background:var(--panel);border:1px solid var(--border);border-radius:9px;overflow:hidden;}
+.shd{padding:15px 19px;background:linear-gradient(135deg,rgba(201,168,76,.12),rgba(201,168,76,.04));border-bottom:1px solid var(--border);display:flex;align-items:center;gap:13px;}
+.sav{width:42px;height:42px;border-radius:50%;background:linear-gradient(135deg,var(--gold-d),var(--gold));display:flex;align-items:center;justify-content:center;font-family:'Cinzel',serif;font-weight:700;font-size:1rem;color:var(--navy);flex-shrink:0;}
+.sname{font-family:'Cinzel',serif;font-size:1rem;color:var(--gold-l);font-weight:600;}
+.srole{font-size:.68rem;color:var(--muted);letter-spacing:.15em;text-transform:uppercase;}
+.sbody{padding:16px 19px;}
+.mr{display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:1px solid rgba(255,255,255,.06);}
+.mr:last-child{border-bottom:none;}
+.ml{font-size:.8rem;color:var(--muted);}
+.mv{display:flex;align-items:center;gap:12px;font-size:.9rem;}
+.mreal{color:var(--text);font-weight:700;}
+.mgoal{color:var(--muted);font-size:.82rem;}
+.mp{font-weight:700;font-size:.86rem;}
+.mp.g{color:var(--green);} .mp.r{color:var(--red);} .mp.a{color:var(--amber);}
+/* meta level text colors */
+.c-min{color:var(--meta-min);} .c-bas{color:var(--meta-bas);} .c-mst{color:var(--meta-mst);} .c-meg{color:var(--meta-meg);}
+th.th-min{color:var(--meta-min);} th.th-bas{color:var(--meta-bas);} th.th-mst{color:var(--meta-mst);} th.th-meg{color:var(--meta-meg);}
+
+/* OVERVIEW */
+.ogrid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:28px;}
+@media(max-width:900px){.ogrid{grid-template-columns:1fr;}}
+.oc{background:var(--panel);border:1px solid var(--border);border-radius:9px;padding:20px;}
+.ot{font-family:'Cinzel',serif;font-size:.82rem;letter-spacing:.1em;color:var(--gold);margin-bottom:14px;padding-bottom:10px;border-bottom:1px solid var(--border);}
+.or{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid rgba(255,255,255,.06);}
+.or:last-child{border-bottom:none;}
+.ol{font-size:.8rem;color:var(--muted);}
+.ov{font-size:.92rem;font-weight:700;color:var(--text);}
+.ov.gold{color:var(--gold-l);} .ov.green{color:var(--green);} .ov.red{color:var(--red);} .ov.amber{color:var(--amber);}
+
+/* META PROG */
+.mpc{background:var(--panel);border:1px solid var(--border);border-radius:9px;padding:20px;margin-bottom:13px;}
+.mph{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;}
+.mpt{font-family:'Cinzel',serif;font-size:.9rem;color:var(--gold-l);}
+.mpv{font-family:'Cinzel',serif;font-size:1.3rem;color:var(--gold-l);}
+.lvrow{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;}
+@media(max-width:650px){.lvrow{grid-template-columns:repeat(2,1fr);}}
+.lvi{text-align:center;padding:10px;border-radius:6px;border:1px solid rgba(255,255,255,.09);}
+.lvi.done{border-color:var(--gold);background:rgba(201,168,76,.1);}
+.lvi .lvn{font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:4px;}
+.lvi .lvn.c-min{color:var(--meta-min);} .lvi .lvn.c-bas{color:var(--meta-bas);} .lvi .lvn.c-mst{color:var(--meta-mst);} .lvi .lvn.c-meg{color:var(--meta-meg);}
+.lvi .lvv{font-size:.88rem;font-weight:700;}
+.lvi.done .lvv{color:var(--gold-l);}
+.lvi .lvp{font-size:.76rem;margin-top:3px;}
+.bt{height:6px;background:rgba(255,255,255,.07);border-radius:10px;margin-top:8px;overflow:hidden;}
+.bi{height:100%;border-radius:10px;background:linear-gradient(90deg,var(--gold-d),var(--gold-l));transition:width .8s;}
+.bi.over{background:linear-gradient(90deg,#3A8A5A,var(--green));}
+
+/* LEVELS */
+.lgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:26px;}
+@media(max-width:750px){.lgrid{grid-template-columns:repeat(2,1fr);}}
+.lcard{background:var(--panel);border:1px solid var(--border);border-radius:9px;padding:17px;text-align:center;}
+.lcard.done{border-color:var(--gold);background:rgba(201,168,76,.08);}
+.lcard .ln{font-family:'Cinzel',serif;font-size:.75rem;letter-spacing:.1em;color:var(--muted);margin-bottom:7px;}
+.lcard .ln.c-min{color:var(--meta-min);} .lcard .ln.c-bas{color:var(--meta-bas);} .lcard .ln.c-mst{color:var(--meta-mst);} .lcard .ln.c-meg{color:var(--meta-meg);}
+.lcard.done .ln.c-min{color:var(--meta-min);} .lcard.done .ln.c-bas{color:var(--meta-bas);} .lcard.done .ln.c-mst{color:var(--meta-mst);} .lcard.done .ln.c-meg{color:var(--meta-meg);}
+.lcard .lic{font-size:1.6rem;margin-bottom:6px;}
+.lcard .lv{font-family:'Cinzel',serif;font-size:1.05rem;color:var(--gold-l);}
+.lcard .lp{font-size:.8rem;margin-top:4px;}
+
+/* TABLE */
+.tw{background:var(--panel);border:1px solid var(--border);border-radius:9px;overflow:hidden;margin-bottom:28px;}
+.twhd{padding:14px 22px;background:linear-gradient(135deg,rgba(201,168,76,.09),rgba(201,168,76,.02));border-bottom:1px solid var(--border);}
+.twhd h3{font-family:'Cinzel',serif;font-size:.88rem;color:var(--gold-l);letter-spacing:.08em;}
+.tscroll{overflow-x:auto;}
+table{width:100%;border-collapse:collapse;font-size:.88rem;}
+th{padding:10px 14px;text-align:left;font-size:.66rem;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--border);white-space:nowrap;}
+td{padding:10px 14px;border-bottom:1px solid rgba(255,255,255,.05);white-space:nowrap;color:var(--text);}
+tr:last-child td{border-bottom:none;}
+tr.mr2 td{font-family:'Cinzel',serif;font-weight:600;color:var(--gold-l);font-size:.9rem;background:rgba(201,168,76,.06);}
+tr:not(.mr2):hover td{background:rgba(255,255,255,.03);}
+.dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:5px;}
+.dg{background:var(--green);} .da{background:var(--amber);} .dr{background:var(--red);}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="hi">
+    <div class="logo">
+      <svg width="46" height="46" viewBox="0 0 46 46" fill="none">
+        <circle cx="23" cy="23" r="22" stroke="url(#gr)" stroke-width="1.2"/>
+        <text x="23" y="30" text-anchor="middle" font-family="Georgia,serif" font-size="16" font-weight="bold" fill="url(#gt)">GG</text>
+        <defs>
+          <linearGradient id="gr" x1="0" y1="0" x2="46" y2="46" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#C9A84C"/><stop offset="50%" stop-color="#F0C84A"/><stop offset="100%" stop-color="#8B6914"/></linearGradient>
+          <linearGradient id="gt" x1="6" y1="6" x2="40" y2="40" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#F0C84A"/><stop offset="100%" stop-color="#C9A84C"/></linearGradient>
+        </defs>
+      </svg>
+      <div class="brand">
+        <h1>Golden Gutter & Construction</h1>
+        <p>Dashboard de Metas 2026 · Atualização Semanal</p>
+      </div>
+    </div>
+    <div class="hw">
+      <div class="l">Período Selecionado</div>
+      <div class="v" id="hdrPeriod">Ano Completo 2026</div>
+    </div>
+  </div>
+</header>
+
+<div class="tabs-sticky">
+  <div class="tbar">
+    <button class="tbtn active" data-tab="ger" onclick="switchTab(this,'ger')">Visão Gerencial</button>
+    <button class="tbtn" data-tab="det" onclick="switchTab(this,'det')">Por Vendedor</button>
+    <button class="tbtn" data-tab="ano" onclick="switchTab(this,'ano')">Comparativo Anual</button>
+  </div>
+</div>
+
+<div class="wrap">
+
+<!-- ═══ TAB GERENCIAL ═══ -->
+<div class="tpanel active" id="tab-ger">
+  <div class="fbar">
+    <div style="display:flex;gap:22px;flex-wrap:wrap;align-items:flex-end;">
+      <div style="flex:1;min-width:200px;">
+        <div class="flbl">Meses — multi-seleção</div>
+        <div class="chips" id="mChips"></div>
+      </div>
+      <div style="flex:1;min-width:200px;">
+        <div class="flbl">Semanas — multi-seleção</div>
+        <div class="chips" id="wChips"></div>
+      </div>
+      <div><button class="cbtn" onclick="clearFilters()">✕ Limpar filtros</button></div>
+    </div>
+  </div>
+
+  <div class="sec">KPIs da Empresa</div>
+  <div class="kgrid">
+    <div class="kcard">
+      <div class="klbl">Job Created Realizado 2026</div>
+      <div class="kval" id="k-fat26">—</div>
+      <div class="ksub"><span class="tag" id="k-fat-tag">—</span><span id="k-fat-meta">meta mín: —</span></div>
+      <div class="pw"><div class="pr"><span>vs Meta Mínima</span><span id="k-fat-pct">—</span></div><div class="pb"><div class="pf" id="k-fat-bar" style="width:0"></div></div></div>
+    </div>
+    <div class="kcard">
+      <div class="klbl">Job Created 2025 (mesmo período)</div>
+      <div class="kval" id="k-fat25">—</div>
+      <div class="ksub"><span class="tag" id="k-yoy-tag">—</span><span id="k-yoy-txt">crescimento YoY</span></div>
+      <div class="pw"><div class="pr"><span>2026 vs 2025</span><span id="k-yoy-pct">—</span></div><div class="pb"><div class="pf" id="k-yoy-bar" style="width:0"></div></div></div>
+    </div>
+    <div class="kcard">
+      <div class="klbl">Estimate Realizado — Germano</div>
+      <div class="kval" id="k-estG">—</div>
+      <div class="ksub"><span id="k-estG-meta">meta mín: —</span></div>
+      <div class="pw"><div class="pr"><span>Atingimento</span><span id="k-estG-pct">—</span></div><div class="pb"><div class="pf" id="k-estG-bar" style="width:0"></div></div></div>
+    </div>
+    <div class="kcard">
+      <div class="klbl">Estimate Realizado — Jordania</div>
+      <div class="kval" id="k-estJ">—</div>
+      <div class="ksub"><span id="k-estJ-meta">meta mín: —</span></div>
+      <div class="pw"><div class="pr"><span>Atingimento</span><span id="k-estJ-pct">—</span></div><div class="pb"><div class="pf" id="k-estJ-bar" style="width:0"></div></div></div>
+    </div>
+  </div>
+
+  <div class="sec">Atingimento por Nível de Meta — Empresa</div>
+  <div id="metaArea"></div>
+
+  <div class="sec">Visão Consolidada por Vendedor</div>
+  <div class="ogrid" style="grid-template-columns:repeat(4,1fr);">
+    <div class="oc" id="ovG"></div>
+    <div class="oc" id="ovJ"></div>
+    <div class="oc" id="ovE3"></div>
+    <div class="oc" id="ovE"></div>
+  </div>
+
+  <div class="sec">Qtd. Estimates &amp; Job Created por Vendedor</div>
+  <div class="kgrid">
+    <div class="kcard">
+      <div class="klbl">J.C. Germano no Período</div>
+      <div class="kval" id="k-fatG">—</div>
+      <div class="ksub"><span class="tag" id="k-fatG-tag">—</span><span id="k-fatG-meta">meta: —</span></div>
+      <div class="pw"><div class="pr"><span>vs Meta Mínima</span><span id="k-fatG-pct">—</span></div><div class="pb"><div class="pf" id="k-fatG-bar" style="width:0"></div></div></div>
+    </div>
+    <div class="kcard">
+      <div class="klbl">J.C. Jordania no Período</div>
+      <div class="kval" id="k-fatJ">—</div>
+      <div class="ksub"><span class="tag" id="k-fatJ-tag">—</span><span id="k-fatJ-meta">meta: —</span></div>
+      <div class="pw"><div class="pr"><span>vs Meta Mínima</span><span id="k-fatJ-pct">—</span></div><div class="pb"><div class="pf" id="k-fatJ-bar" style="width:0"></div></div></div>
+    </div>
+    <div class="kcard">
+      <div class="klbl">Qtd. Estimates Germano</div>
+      <div class="kval" id="k-qtdG">—</div>
+      <div class="ksub"><span id="k-qtdG-meta">meta mín: —</span></div>
+      <div class="pw"><div class="pr"><span>Atingimento</span><span id="k-qtdG-pct">—</span></div><div class="pb"><div class="pf" id="k-qtdG-bar" style="width:0"></div></div></div>
+    </div>
+    <div class="kcard">
+      <div class="klbl">Qtd. Estimates Jordania</div>
+      <div class="kval" id="k-qtdJ">—</div>
+      <div class="ksub"><span id="k-qtdJ-meta">meta mín: —</span></div>
+      <div class="pw"><div class="pr"><span>Atingimento</span><span id="k-qtdJ-pct">—</span></div><div class="pb"><div class="pf" id="k-qtdJ-bar" style="width:0"></div></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ TAB VENDEDOR ═══ -->
+<div class="tpanel" id="tab-det">
+  <div class="fbar">
+    <div style="display:flex;gap:22px;flex-wrap:wrap;align-items:flex-end;">
+      <div style="flex:1;min-width:200px;">
+        <div class="flbl">Meses — multi-seleção</div>
+        <div class="chips" id="mChips2"></div>
+      </div>
+      <div style="flex:1;min-width:200px;">
+        <div class="flbl">Semanas — multi-seleção</div>
+        <div class="chips" id="wChips2"></div>
+      </div>
+      <div><button class="cbtn" onclick="clearFilters()">✕ Limpar</button></div>
+    </div>
+  </div>
+
+  <div class="sec">Detalhes por Vendedor</div>
+  <div class="sgrid" style="grid-template-columns:repeat(3,1fr);">
+    <div class="sc">
+      <div class="shd"><div class="sav">G</div><div><div class="sname">Germano</div><div class="srole">Vendedor</div></div></div>
+      <div class="sbody">
+        <div class="mr"><span class="ml">Job Created Realizado 2026</span><div class="mv"><span class="mreal" id="d-gfat">—</span><span class="mgoal" id="d-gfatm">/ —</span><span class="mp" id="d-gfatp">—</span></div></div>
+        <div class="mr"><span class="ml">Job Created Realizado 2025</span><div class="mv"><span class="mreal" id="d-gfat25">—</span></div></div>
+        <div class="mr"><span class="ml">Qtd. Estimates Realizados</span><div class="mv"><span class="mreal" id="d-gqtd">—</span><span class="mgoal" id="d-gqtdm">/ —</span></div></div>
+        <div class="mr"><span class="ml">Nível Meta Atingido</span><div class="mv"><span class="mp" id="d-glvl">—</span></div></div>
+      </div>
+    </div>
+    <div class="sc">
+      <div class="shd"><div class="sav">J</div><div><div class="sname">Jordania</div><div class="srole">Vendedor</div></div></div>
+      <div class="sbody">
+        <div class="mr"><span class="ml">Job Created Realizado 2026</span><div class="mv"><span class="mreal" id="d-jfat">—</span><span class="mgoal" id="d-jfatm">/ —</span><span class="mp" id="d-jfatp">—</span></div></div>
+        <div class="mr"><span class="ml">Job Created Realizado 2025</span><div class="mv"><span class="mreal" id="d-jfat25">—</span></div></div>
+        <div class="mr"><span class="ml">Qtd. Estimates Realizados</span><div class="mv"><span class="mreal" id="d-jqtd">—</span><span class="mgoal" id="d-jqtdm">/ —</span></div></div>
+        <div class="mr"><span class="ml">Nível Meta Atingido</span><div class="mv"><span class="mp" id="d-jlvl">—</span></div></div>
+      </div>
+    </div>
+    <div class="sc">
+      <div class="shd"><div class="sav" style="font-size:.65rem;">E3</div><div><div class="sname">Empresa (3)</div><div class="srole">Gap Meta Loja vs Vendedores</div></div></div>
+      <div class="sbody">
+        <div class="mr"><span class="ml">Job Created Realizado 2026</span><div class="mv"><span class="mreal" id="d-e3fat">—</span><span class="mgoal" id="d-e3fatm">/ —</span><span class="mp" id="d-e3fatp">—</span></div></div>
+        <div class="mr"><span class="ml">Meta Mínima</span><div class="mv"><span class="mreal" id="d-e3min">—</span></div></div>
+        <div class="mr"><span class="ml">Meta Básica</span><div class="mv"><span class="mreal" id="d-e3bas">—</span></div></div>
+        <div class="mr"><span class="ml">Meta Master</span><div class="mv"><span class="mreal" id="d-e3mst">—</span></div></div>
+        <div class="mr"><span class="ml">Meta Mega Master</span><div class="mv"><span class="mreal" id="d-e3meg">—</span></div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sec">Metas por Nível — Germano</div>
+  <div class="lgrid" id="lvlG"></div>
+  <div class="sec">Metas por Nível — Jordania</div>
+  <div class="lgrid" id="lvlJ"></div>
+</div>
+
+<!-- ═══ TAB ANUAL ═══ -->
+<div class="tpanel" id="tab-ano">
+  <div class="sec">Empresa — Metas vs Realizado 2026 (todos os meses)</div>
+  <div class="tw">
+    <div class="twhd"><h3>Job Created Mensal — Empresa</h3></div>
+    <div class="tscroll"><table>
+      <thead><tr><th>Mês</th><th>J.C. 2025</th><th>J.C. 2026</th><th class="th-min">Meta Mínima</th><th class="th-bas">Meta Básica</th><th class="th-mst">Meta Master</th><th class="th-meg">Meta Mega Master</th><th class="th-min">% Mín.</th><th class="th-bas">% Bás.</th><th class="th-mst">% Mast.</th><th class="th-meg">% Mega</th><th>Status</th></tr></thead>
+      <tbody id="tAnual"></tbody>
+    </table></div>
+  </div>
+
+  <div class="sec">Job Created por Vendedor — Mês a Mês</div>
+  <div class="tw">
+    <div class="twhd"><h3>Germano e Jordania</h3></div>
+    <div class="tscroll"><table>
+      <thead><tr><th>Mês</th><th>Germano 2025</th><th>Germano 2026</th><th>Meta Mín. G.</th><th>% Meta G.</th><th>Jordania 2025</th><th>Jordania 2026</th><th>Meta Mín. J.</th><th>% Meta J.</th><th class="th-min">Empresa(3) 2026</th><th class="th-min">Meta Mín. E3</th><th>% Meta E3</th></tr></thead>
+      <tbody id="tVend"></tbody>
+    </table></div>
+  </div>
+</div>
+
+</div><!-- /wrap -->
+
+<footer style="border-top:1px solid var(--border);padding:16px 0;text-align:center;">
+  <p style="font-size:.58rem;letter-spacing:.2em;color:var(--muted);text-transform:uppercase;">Golden Gutter & Construction · Dashboard de Metas 2026 · Fonte: Aba "Acompanhamento Vendedor 2026"</p>
+</footer>
+
+<script>
+// ─── DATA — Aba "Acompanhamento Vendedor 2026" (atualizado)
+const D = {months:[
+  {n:'Janeiro',  ws:['Semana 1','Semana 2','Semana 3','Semana 4'],
+   r25e:67862,r25g:29185,r25j:7505, r26e:80081,r26g:20477,r26j:20505,r26e3:39099,
+   estG:150162,estJ:98691,qtdG:25,qtdJ:31,
+   minE:88220.6,  minG:37940.5,  minJ:25805.1,  minQtdG:31,  minQtdJ:21,  minE3:17763.69,
+   basE:97042.66, basG:41734.55, basJ:30966.11, basQtdG:34,  basQtdJ:25,  basE3:16959.55,
+   mstE:106746.93,mstG:45908.01, mstJ:35920.69, mstQtdG:37,  mstQtdJ:29,  mstE3:16797.54,
+   megE:117421.62,megG:50498.81, megJ:41288.15, megQtdG:41,  megQtdJ:34,  megE3:16701.91},
+  {n:'Fevereiro',ws:['Semana 1','Semana 2','Semana 3','Semana 4'],
+   r25e:59914,r25g:14777,r25j:11145, r26e:67390,r26g:20746,r26j:12940,r26e3:33704,
+   estG:296153,estJ:102554,qtdG:33,qtdJ:27,
+   minE:77888.2,  minG:19210.1,  minJ:22782.8,  minQtdG:16,  minQtdJ:19,  minE3:15683.21,
+   basE:85677.02, basG:21131.11, basJ:27339.36, basQtdG:17,  basQtdJ:22,  basE3:14973.25,
+   mstE:94244.72, mstG:23244.22, mstJ:31713.66, mstQtdG:19,  mstQtdJ:26,  mstE3:14830.21,
+   megE:103669.19,megG:25568.64, megJ:36452.48, megQtdG:21,  megQtdJ:30,  megE3:14745.78},
+  {n:'Março',    ws:['Semana 1','Semana 2','Semana 3','Semana 4'],
+   r25e:108681,r25g:53031,r25j:0, r26e:176540.26,r26g:62311,r26j:67499.52,r26e3:46729.74,
+   estG:293283,estJ:138359,qtdG:61,qtdJ:59,
+   minE:141285.3, minG:68940.3,  minJ:41326.86, minQtdG:56,  minQtdJ:34,  minE3:28448.56,
+   basE:155413.83,basG:75834.33, basJ:49592.24, basQtdG:62,  basQtdJ:40,  basE3:27160.73,
+   mstE:170955.21,mstG:83417.76, mstJ:57526.99, mstQtdG:68,  mstQtdJ:47,  mstE3:26901.27,
+   megE:188050.73,megG:91759.54, megJ:66122.98, megQtdG:75,  megQtdJ:54,  megE3:26748.11},
+  {n:'Abril',    ws:['1 a 4','5 a 11','12 a 18','19 a 25','26 a 30'],
+   r25e:147816,r25g:105884,r25j:0, r26e:306959,r26g:165725,r26j:51304.58,r26e3:89929.42,
+   estG:316223,estJ:199088.79,qtdG:67,qtdJ:66,
+   minE:192160.8, minG:137649.2, minJ:56208.28, minQtdG:112, minQtdJ:46,  minE3:38692.62,
+   basE:211376.88,basG:151414.12,basJ:67449.93, basQtdG:123, basQtdJ:55,  basE3:36941.05,
+   mstE:232514.57,mstG:166555.53,mstJ:78241.92, mstQtdG:135, mstQtdJ:64,  mstE3:36588.16,
+   megE:255766.02,megG:183211.09,megJ:89933.24, megQtdG:149, megQtdJ:73,  megE3:36379.85},
+  {n:'Maio',     ws:['1 a 9','10 a 16','17 a 23','24 a 31'],
+   r25e:169495,r25g:122953,r25j:0, r26e:146018,r26g:25613,r26j:103999,r26e3:16406,
+   estG:37638,estJ:62217,qtdG:32,qtdJ:24,
+   minE:220343.5, minG:159838.9, minJ:64451.9,  minQtdG:130, minQtdJ:52,  minE3:44367.35,
+   basE:242377.85,basG:175822.79,basJ:77342.28, basQtdG:143, basQtdJ:63,  basE3:42358.90,
+   mstE:266615.64,mstG:193405.07,mstJ:89717.04, mstQtdG:157, mstQtdJ:73,  mstE3:41954.25,
+   megE:293277.2, megG:212745.58,megJ:103123.04,megQtdG:173, megQtdJ:84,  megE3:41715.39},
+  {n:'Junho',    ws:['1 a 6','7 a 13','14 a 20','21 a 27','28 a 30'],
+   r25e:256177,r25g:152846,r25j:0, r26e:0,r26g:0,r26j:0,r26e3:0,
+   estG:0,estJ:0,qtdG:0,qtdJ:0,
+   minE:333030.1, minG:198699.8, minJ:97413.46, minQtdG:162, minQtdJ:79,  minE3:67057.41,
+   basE:366333.11,basG:218569.78,basJ:116896.15,basQtdG:178, basQtdJ:95,  basE3:64021.81,
+   mstE:402966.42,mstG:240426.76,mstJ:135599.53,mstQtdG:195, mstQtdJ:110, mstE3:63410.22,
+   megE:443263.06,megG:264469.43,megJ:155861.53,megQtdG:215, megQtdJ:127, megE3:63049.19},
+  {n:'Julho',    ws:['1 a 4','5 a 11','12 a 18','19 a 25','26 a 31'],
+   r25e:114908,r25g:52010,r25j:7251, r26e:0,r26g:0,r26j:0,r26e3:0,
+   estG:0,estJ:0,qtdG:0,qtdJ:0,
+   minE:149380.4, minG:67613,    minJ:43694.73, minQtdG:55,  minQtdJ:36,  minE3:30078.55,
+   basE:164318.44,basG:74374.3,  basJ:52433.68, basQtdG:60,  basQtdJ:43,  basE3:28716.93,
+   mstE:180750.28,mstG:81811.73, mstJ:60823.07, mstQtdG:67,  mstQtdJ:49,  mstE3:28442.61,
+   megE:198825.31,megG:89992.9,  megJ:69911.57, megQtdG:73,  megQtdJ:57,  megE3:28280.67},
+  {n:'Agosto',   ws:['1 a 8','9 a 15','16 a 22','23 a 31'],
+   r25e:206729,r25g:88297,r25j:25432, r26e:0,r26g:0,r26j:0,r26e3:0,
+   estG:0,estJ:0,qtdG:0,qtdJ:0,
+   minE:268747.7, minG:114786.1, minJ:78610.44, minQtdG:93,  minQtdJ:64,  minE3:54113.80,
+   basE:295622.47,basG:126264.71,basJ:94332.53, basQtdG:103, basQtdJ:77,  basE3:51664.14,
+   mstE:325184.72,mstG:138891.18,mstJ:109425.73,mstQtdG:113, mstQtdJ:89,  mstE3:51170.60,
+   megE:357703.19,megG:152780.3, megJ:125776.7, megQtdG:124, megQtdJ:102, megE3:50879.26},
+  {n:'Setembro', ws:['1 a 5','6 a 12','13 a 19','20 a 26','27 a 30'],
+   r25e:204771,r25g:85724,r25j:35750, r26e:0,r26g:0,r26j:0,r26e3:0,
+   estG:0,estJ:0,qtdG:0,qtdJ:0,
+   minE:266202.3, minG:111441.2, minJ:77865.89, minQtdG:91,  minQtdJ:63,  minE3:53601.27,
+   basE:292822.53,basG:122585.32,basJ:93439.07, basQtdG:100, basQtdJ:76,  basE3:51174.81,
+   mstE:322104.78,mstG:134843.85,mstJ:108389.32,mstQtdG:110, mstQtdJ:88,  mstE3:50685.95,
+   megE:354315.26,megG:148328.24,megJ:124585.43,megQtdG:121, megQtdJ:101, megE3:50397.37},
+  {n:'Outubro',  ws:['1 a 10','11 a 17','18 a 24','25 a 31'],
+   r25e:209867,r25g:97212,r25j:53380, r26e:0,r26g:0,r26j:0,r26e3:0,
+   estG:0,estJ:0,qtdG:0,qtdJ:0,
+   minE:272827.1, minG:126375.6, minJ:79803.69, minQtdG:103, minQtdJ:65,  minE3:54935.21,
+   basE:300109.81,basG:139013.16,basJ:95764.43, basQtdG:113, basQtdJ:78,  basE3:52448.36,
+   mstE:330120.79,mstG:152914.48,mstJ:111086.74,mstQtdG:124, mstQtdJ:90,  mstE3:51947.33,
+   megE:363132.87,megG:168205.92,megJ:127685.9, megQtdG:137, megQtdJ:104, megE3:51651.57},
+  {n:'Novembro', ws:['1 a 7','8 a 14','15 a 21','22 a 30'],
+   r25e:264013,r25g:142449,r25j:38600, r26e:0,r26g:0,r26j:0,r26e3:0,
+   estG:0,estJ:0,qtdG:0,qtdJ:0,
+   minE:343216.9, minG:185183.7, minJ:100393.16,minQtdG:151, minQtdJ:82,  minE3:69108.58,
+   basE:377538.59,basG:203702.07,basJ:120471.79,basQtdG:166, basQtdJ:98,  basE3:65980.12,
+   mstE:415292.45,mstG:224072.28,mstJ:139747.28,mstQtdG:182, mstQtdJ:114, mstE3:65349.82,
+   megE:456821.69,megG:246479.5, megJ:160629.06,megQtdG:200, megQtdJ:131, megE3:64977.76},
+  {n:'Dezembro', ws:['1 a 5','6 a 12','13 a 19','20 a 26','27 a 31'],
+   r25e:162110,r25g:53910,r25j:40775, r26e:0,r26g:0,r26j:0,r26e3:0,
+   estG:0,estJ:0,qtdG:0,qtdJ:0,
+   minE:210743,   minG:70083,    minJ:61643.69, minQtdG:57,  minQtdJ:50,  minE3:42434.24,
+   basE:231817.3, basG:77091.3,  basJ:73972.43, basQtdG:63,  basQtdJ:60,  basE3:40513.30,
+   mstE:254999.03,mstG:84800.43, mstJ:85808.02, mstQtdG:69,  mstQtdJ:70,  mstE3:40126.28,
+   megE:280498.93,megG:93280.47, megJ:98629.9,  megQtdG:76,  megQtdJ:80,  megE3:39897.82},
+]};
+
+// ─── State
+let selM=new Set(), selW=new Set();
+
+// ─── Helpers
+const $=id=>document.getElementById(id);
+const f$=v=>v==null||isNaN(v)?'—':'$'+Math.round(v).toLocaleString('en-US');
+const n$=v=>v==null||isNaN(v)?'—':Math.round(v)+'';
+const pct=(r,m)=>m>0?Math.round(r/m*100):null;
+const pctS=(r,m)=>{const p=pct(r,m);return p==null?'—':p+'%';};
+const pCls=p=>p==null?'':p>=100?'g':p>=70?'a':'r';
+const tCls=p=>p==null?'tag':p>=100?'tag tg':p>=70?'tag ta':'tag tr';
+const tTxt=p=>p==null?'—':p>=100?'✓ Atingido':p>=70?'⚡ Em Curso':'↗ Abaixo';
+
+function setBar(id,r,m){
+  const el=$(id);if(!el)return;
+  const p=m>0?Math.min(r/m*100,100):0;
+  el.style.width=p+'%';
+  el.className='pf'+(r>=m?' over':r/m>=.7?' warn':'');
+}
+function setK(vId,tagId,metaId,pctId,barId,r,m,metaTxt){
+  const p=pct(r,m);
+  if($(vId))$(vId).textContent=f$(r);
+  if($(tagId)){$(tagId).textContent=tTxt(p);$(tagId).className=tCls(p);}
+  if($(metaId))$(metaId).textContent=metaTxt||'';
+  if($(pctId))$(pctId).textContent=pctS(r,m);
+  if($(barId))setBar(barId,r,m);
+}
+function lvlLbl(r,min,bas,mst,meg){
+  if(meg>0&&r>=meg)return{l:'🏆 Mega Master',c:'g'};
+  if(r>=mst)return{l:'⭐ Master',c:'g'};
+  if(r>=bas)return{l:'✓ Básica',c:'a'};
+  if(r>=min)return{l:'✓ Mínima',c:'a'};
+  return{l:'↗ Abaixo Mínima',c:'r'};
+}
+
+// ─── All unique weeks from active months only
+function allW(){
+  const activeMths=selM.size>0?D.months.filter(m=>selM.has(m.n)):D.months;
+  const s=new Set();
+  activeMths.forEach(m=>m.ws.forEach(w=>s.add(w)));
+  return [...s];
+}
+
+// ─── Build filter chips
+function buildChips(cid,items,type){
+  const el=$(cid);if(!el)return;
+  el.innerHTML='';
+  items.forEach(item=>{
+    const set=type==='m'?selM:selW;
+    const c=document.createElement('span');
+    c.className='chip'+(set.has(item)?' sel':'');
+    c.textContent=item;
+    c.onclick=()=>{
+      if(type==='m'){
+        selM.has(item)?selM.delete(item):selM.add(item);
+        // Remove selected weeks that no longer belong to active months
+        const valid=new Set();
+        const activeMths2=selM.size>0?D.months.filter(m=>selM.has(m.n)):D.months;
+        activeMths2.forEach(m=>m.ws.forEach(w=>valid.add(w)));
+        for(const w of [...selW]) if(!valid.has(w)) selW.delete(w);
+      } else {
+        selW.has(item)?selW.delete(item):selW.add(item);
+      }
+      refreshChips();render();
+    };
+    el.appendChild(c);
+  });
+}
+function refreshChips(){
+  const mn=D.months.map(m=>m.n);
+  buildChips('mChips',mn,'m'); buildChips('mChips2',mn,'m');
+  buildChips('wChips',allW(),'w'); buildChips('wChips2',allW(),'w');
+}
+function clearFilters(){selM.clear();selW.clear();refreshChips();render();}
+
+// ─── Aggregate
+function agg(){
+  const mths=selM.size>0?D.months.filter(m=>selM.has(m.n)):D.months;
+  const rows=selW.size>0?mths.filter(m=>m.ws.some(w=>selW.has(w))):mths;
+  const s=k=>rows.reduce((acc,m)=>acc+(m[k]||0),0);
+  return{rows,
+    r26e:s('r26e'),r25e:s('r25e'),r26g:s('r26g'),r25g:s('r25g'),r26j:s('r26j'),r25j:s('r25j'),r26e3:s('r26e3'),
+    estG:s('estG'),estJ:s('estJ'),qtdG:s('qtdG'),qtdJ:s('qtdJ'),
+    minE:s('minE'),minG:s('minG'),minJ:s('minJ'),minQtdG:s('minQtdG'),minQtdJ:s('minQtdJ'),minE3:s('minE3'),
+    basE:s('basE'),basG:s('basG'),basJ:s('basJ'),basQtdG:s('basQtdG'),basQtdJ:s('basQtdJ'),basE3:s('basE3'),
+    mstE:s('mstE'),mstG:s('mstG'),mstJ:s('mstJ'),mstQtdG:s('mstQtdG'),mstQtdJ:s('mstQtdJ'),mstE3:s('mstE3'),
+    megE:s('megE'),megG:s('megG'),megJ:s('megJ'),megQtdG:s('megQtdG'),megQtdJ:s('megQtdJ'),megE3:s('megE3'),
+  };
+}
+
+function periodLbl(){
+  if(!selM.size&&!selW.size)return'Ano Completo 2026';
+  let s='';
+  if(selM.size)s+=[...selM].join(', ');
+  if(selW.size)s+=(s?' · ':'')+[...selW].join(', ');
+  return s;
+}
+
+// ─── Render
+function render(){
+  const a=agg();
+  $('hdrPeriod').textContent=periodLbl();
+
+  // KPIs empresa
+  setK('k-fat26','k-fat-tag','k-fat-meta','k-fat-pct','k-fat-bar',a.r26e,a.minE,'meta mín: '+f$(a.minE));
+  // YoY
+  $('k-fat25').textContent=f$(a.r25e);
+  const yoy=a.r25e>0?Math.round((a.r26e/a.r25e-1)*100):null;
+  $('k-yoy-pct').textContent=yoy!=null?(yoy>0?'+':'')+yoy+'%':'—';
+  $('k-yoy-txt').textContent='2026 vs 2025: '+f$(a.r25e);
+  const ytag=$('k-yoy-tag');
+  if(yoy!=null){ytag.textContent=yoy>=0?'▲ Cresceu':'▼ Caiu';ytag.className=yoy>=0?'tag tg':'tag tr';}
+  setBar('k-yoy-bar',a.r26e,a.r25e);
+  // estimates
+  const estGlbl=a.estG>0?f$(a.estG):'Aguardando dados';
+  const estJlbl=a.estJ>0?f$(a.estJ):'Aguardando dados';
+  $('k-estG').textContent=estGlbl;
+  $('k-estG-meta').textContent='meta mín: '+f$(a.minEstG);
+  $('k-estG-pct').textContent=a.estG>0?pctS(a.estG,a.minEstG):'—';
+  if(a.estG>0)setBar('k-estG-bar',a.estG,a.minEstG);
+  $('k-estJ').textContent=estJlbl;
+  $('k-estJ-meta').textContent='meta mín: '+f$(a.minEstJ);
+  $('k-estJ-pct').textContent=a.estJ>0?pctS(a.estJ,a.minEstJ):'—';
+  if(a.estJ>0)setBar('k-estJ-bar',a.estJ,a.minEstJ);
+
+  const lvClr=['c-min','c-bas','c-mst','c-meg'];
+  const mp=$('metaArea');
+  const lvs=[{n:'Mínima',e:a.minE,c:'c-min'},{n:'Básica',e:a.basE,c:'c-bas'},{n:'Master',e:a.mstE,c:'c-mst'},{n:'Mega Master',e:a.megE,c:'c-meg'}];
+  mp.innerHTML=`<div class="mpc">
+    <div class="mph"><span class="mpt">Empresa — Job Created 2026 no Período</span><span class="mpv">${f$(a.r26e)}</span></div>
+    <div class="lvrow">${lvs.map(l=>{
+      const p=l.e>0?Math.round(a.r26e/l.e*100):0;const done=a.r26e>=l.e;
+      return`<div class="lvi${done?' done':''}"><div class="lvn ${l.c}">${l.n}</div><div class="lvv">${f$(l.e)}</div>
+        <div class="lvp mp ${p>=100?'g':p>=70?'a':'r'}">${p}%</div>
+        <div class="bt"><div class="bi${done?' over':''}" style="width:${Math.min(p,100)}%"></div></div></div>`;
+    }).join('')}</div></div>`;
+
+  // Overview cards
+  function ov(id,title,rows){
+    const el=$(id);if(!el)return;
+    el.innerHTML=`<div class="ot">${title}</div>`+rows.map(r=>`<div class="or"><span class="ol">${r.l}</span><span class="ov ${r.c||''}">${r.v}</span></div>`).join('');
+  }
+  const gLvl=lvlLbl(a.r26g,a.minG,a.basG,a.mstG,a.megG);
+  const jLvl=lvlLbl(a.r26j,a.minJ,a.basJ,a.mstJ,a.megJ);
+  const eLvl=lvlLbl(a.r26e,a.minE,a.basE,a.mstE,a.megE);
+  const gp=pct(a.r26g,a.minG), jp=pct(a.r26j,a.minJ), ep=pct(a.r26e,a.minE);
+
+  ov('ovG','Germano',[
+    {l:'Job Created 2026',v:f$(a.r26g),c:'gold'},{l:'Job Created 2025',v:f$(a.r25g)},
+    {l:'Meta Mínima J.C.',v:f$(a.minG)},{l:'% Atingimento',v:pctS(a.r26g,a.minG),c:pCls(gp)},
+    {l:'Estimate Realizado',v:a.estG>0?f$(a.estG):'Aguardando'},{l:'Qtd. Estimates',v:a.qtdG>0?n$(a.qtdG):'Aguardando'},
+    {l:'Nível Meta',v:gLvl.l,c:gLvl.c},
+  ]);
+  ov('ovJ','Jordania',[
+    {l:'Job Created 2026',v:f$(a.r26j),c:'gold'},{l:'Job Created 2025',v:f$(a.r25j)},
+    {l:'Meta Mínima J.C.',v:f$(a.minJ)},{l:'% Atingimento',v:pctS(a.r26j,a.minJ),c:pCls(jp)},
+    {l:'Estimate Realizado',v:a.estJ>0?f$(a.estJ):'Aguardando'},{l:'Qtd. Estimates',v:a.qtdJ>0?n$(a.qtdJ):'Aguardando'},
+    {l:'Nível Meta',v:jLvl.l,c:jLvl.c},
+  ]);
+  const e3p=pct(a.r26e3,a.minE3);
+  ov('ovE3','Empresa (3) — Gap Meta',[
+    {l:'J.C. Realizado 2026',v:a.r26e3>0?f$(a.r26e3):'Aguardando',c:'gold'},
+    {l:'Meta Mínima',v:f$(a.minE3),c:'c-min'},{l:'% vs Mínima',v:pctS(a.r26e3,a.minE3),c:pCls(e3p)},
+    {l:'Meta Básica',v:f$(a.basE3),c:'c-bas'},{l:'% vs Básica',v:pctS(a.r26e3,a.basE3)},
+    {l:'Meta Master',v:f$(a.mstE3),c:'c-mst'},{l:'% vs Master',v:pctS(a.r26e3,a.mstE3)},
+    {l:'Meta Mega Master',v:f$(a.megE3),c:'c-meg'},{l:'% vs Mega',v:pctS(a.r26e3,a.megE3)},
+  ]);
+  // d-e3 fields
+  if($('d-e3fat')){
+    $('d-e3fat').textContent=a.r26e3>0?f$(a.r26e3):'Aguardando';
+    $('d-e3fatm').textContent='/ '+f$(a.minE3);
+    const pe3=pct(a.r26e3,a.minE3);const pe3el=$('d-e3fatp');pe3el.textContent=pctS(a.r26e3,a.minE3);pe3el.className='mp '+pCls(pe3);
+    $('d-e3min').textContent=f$(a.minE3);
+    $('d-e3bas').textContent=f$(a.basE3);
+    $('d-e3mst').textContent=f$(a.mstE3);
+    $('d-e3meg').textContent=f$(a.megE3);
+  }
+  ov('ovE','Empresa (Consolidado)',[
+    {l:'Job Created Total 2026',v:f$(a.r26e),c:'gold'},{l:'Job Created Total 2025',v:f$(a.r25e)},
+    {l:'Crescimento YoY',v:yoy!=null?(yoy>0?'+':'')+yoy+'%':'—',c:yoy!=null&&yoy>=0?'green':'red'},
+    {l:'Meta Mínima J.C.',v:f$(a.minE)},{l:'% vs Meta Mínima',v:pctS(a.r26e,a.minE),c:pCls(ep)},
+    {l:'% vs Meta Básica',v:pctS(a.r26e,a.basE)},{l:'% vs Meta Master',v:pctS(a.r26e,a.mstE)},
+    {l:'Nível Meta',v:eLvl.l,c:eLvl.c},
+  ]);
+
+  // Qtd/fat kpis
+  setK('k-fatG','k-fatG-tag','k-fatG-meta','k-fatG-pct','k-fatG-bar',a.r26g,a.minG,'meta mín J.C.: '+f$(a.minG));
+  setK('k-fatJ','k-fatJ-tag','k-fatJ-meta','k-fatJ-pct','k-fatJ-bar',a.r26j,a.minJ,'meta mín J.C.: '+f$(a.minJ));
+  // qtd
+  const qtdGv=$('k-qtdG');if(qtdGv)qtdGv.textContent=a.qtdG>0?n$(a.qtdG):'Aguardando';
+  $('k-qtdG-meta').textContent='meta mín: '+n$(a.minQtdG);
+  $('k-qtdG-pct').textContent=a.qtdG>0?pctS(a.qtdG,a.minQtdG):'—';
+  if(a.qtdG>0)setBar('k-qtdG-bar',a.qtdG,a.minQtdG);
+  const qtdJv=$('k-qtdJ');if(qtdJv)qtdJv.textContent=a.qtdJ>0?n$(a.qtdJ):'Aguardando';
+  $('k-qtdJ-meta').textContent='meta mín: '+n$(a.minQtdJ);
+  $('k-qtdJ-pct').textContent=a.qtdJ>0?pctS(a.qtdJ,a.minQtdJ):'—';
+  if(a.qtdJ>0)setBar('k-qtdJ-bar',a.qtdJ,a.minQtdJ);
+
+  // ─── TAB VENDEDOR
+  $('d-gfat').textContent=f$(a.r26g);
+  $('d-gfatm').textContent='/ '+f$(a.minG);
+  const dgp=pct(a.r26g,a.minG);const dpg=$('d-gfatp');dpg.textContent=pctS(a.r26g,a.minG);dpg.className='mp '+pCls(dgp);
+  $('d-gfat25').textContent=f$(a.r25g);
+  $('d-gqtd').textContent=a.qtdG>0?n$(a.qtdG):'Aguardando';
+  $('d-gqtdm').textContent='/ '+n$(a.minQtdG);
+  const gl=lvlLbl(a.r26g,a.minG,a.basG,a.mstG,a.megG);
+  const gle=$('d-glvl');gle.textContent=gl.l;gle.className='mp '+gl.c;
+
+  $('d-jfat').textContent=f$(a.r26j);
+  $('d-jfatm').textContent='/ '+f$(a.minJ);
+  const djp=pct(a.r26j,a.minJ);const dpj=$('d-jfatp');dpj.textContent=pctS(a.r26j,a.minJ);dpj.className='mp '+pCls(djp);
+  $('d-jfat25').textContent=f$(a.r25j);
+  $('d-jqtd').textContent=a.qtdJ>0?n$(a.qtdJ):'Aguardando';
+  $('d-jqtdm').textContent='/ '+n$(a.minQtdJ);
+  const jl=lvlLbl(a.r26j,a.minJ,a.basJ,a.mstJ,a.megJ);
+  const jle=$('d-jlvl');jle.textContent=jl.l;jle.className='mp '+jl.c;
+
+  // Level grids
+  function rLvl(id,r,ls){
+    const el=$(id);if(!el)return;
+    el.innerHTML=ls.map(l=>{
+      const p=l.m>0?Math.round(r/l.m*100):0;const done=r>=l.m;
+      return`<div class="lcard${done?' done':''}"><div class="ln ${l.c}">${l.n}</div><div class="lic">${l.i}</div>
+        <div class="lv">${f$(l.m)}</div><div class="lp mp ${p>=100?'g':p>=70?'a':'r'}">${p}%</div></div>`;
+    }).join('');
+  }
+  rLvl('lvlG',a.r26g,[{n:'Mínima',m:a.minG,i:'🎯',c:'c-min'},{n:'Básica',m:a.basG,i:'⭐',c:'c-bas'},{n:'Master',m:a.mstG,i:'🚀',c:'c-mst'},{n:'Mega Master',m:a.megG,i:'🏆',c:'c-meg'}]);
+  rLvl('lvlJ',a.r26j,[{n:'Mínima',m:a.minJ,i:'🎯',c:'c-min'},{n:'Básica',m:a.basJ,i:'⭐',c:'c-bas'},{n:'Master',m:a.mstJ,i:'🚀',c:'c-mst'},{n:'Mega Master',m:a.megJ,i:'🏆',c:'c-meg'}]);
+
+  // ─── TAB ANUAL
+  $('tAnual').innerHTML=D.months.map(m=>{
+    const has=m.r26e>0;
+    const p1=has?pct(m.r26e,m.minE):null,p2=has?pct(m.r26e,m.basE):null,p3=has?pct(m.r26e,m.mstE):null,p4=has?pct(m.r26e,m.megE):null;
+    const st=!has?'<span style="color:var(--muted)">Pendente</span>'
+      :m.r26e>=m.megE?`<span class="dot" style="background:var(--meta-meg)"></span><span class="mp" style="color:var(--meta-meg)">Mega Master 🏆</span>`
+      :m.r26e>=m.mstE?`<span class="dot dg"></span><span class="mp g">Master ⭐</span>`
+      :m.r26e>=m.basE?`<span class="dot" style="background:var(--meta-bas)"></span><span class="mp" style="color:var(--meta-bas)">Básica ✓</span>`
+      :m.r26e>=m.minE?`<span class="dot" style="background:var(--meta-min)"></span><span class="mp" style="color:var(--meta-min)">Mínima ✓</span>`
+      :p1>=70?`<span class="dot da"></span><span class="mp a">Em Curso</span>`
+      :`<span class="dot dr"></span><span class="mp r">Abaixo</span>`;
+    return`<tr class="mr2"><td>${m.n}</td><td>${f$(m.r25e)}</td>
+      <td>${has?f$(m.r26e):'<span style="color:var(--muted)">—</span>'}</td>
+      <td class="c-min">${f$(m.minE)}</td><td class="c-bas">${f$(m.basE)}</td><td class="c-mst">${f$(m.mstE)}</td><td class="c-meg">${f$(m.megE)}</td>
+      <td>${p1!=null?`<span class="mp ${pCls(p1)}">${p1}%</span>`:'—'}</td>
+      <td>${p2!=null?`<span class="mp ${pCls(p2)}">${p2}%</span>`:'—'}</td>
+      <td>${p3!=null?`<span class="mp ${pCls(p3)}">${p3}%</span>`:'—'}</td>
+      <td>${p4!=null?`<span class="mp ${pCls(p4)}">${p4}%</span>`:'—'}</td>
+      <td>${st}</td></tr>`;
+  }).join('');
+
+  $('tVend').innerHTML=D.months.map(m=>{
+    const gp2=m.r26g>0?pct(m.r26g,m.minG):null,jp2=m.r26j>0?pct(m.r26j,m.minJ):null,e3p2=m.r26e3>0?pct(m.r26e3,m.minE3):null;
+    return`<tr class="mr2"><td>${m.n}</td>
+      <td>${f$(m.r25g)}</td><td>${m.r26g>0?f$(m.r26g):'<span style="color:var(--muted)">—</span>'}</td>
+      <td>${f$(m.minG)}</td><td>${gp2!=null?`<span class="mp ${pCls(gp2)}">${gp2}%</span>`:'—'}</td>
+      <td>${f$(m.r25j)}</td><td>${m.r26j>0?f$(m.r26j):'<span style="color:var(--muted)">—</span>'}</td>
+      <td>${f$(m.minJ)}</td><td>${jp2!=null?`<span class="mp ${pCls(jp2)}">${jp2}%</span>`:'—'}</td>
+      <td>${m.r26e3>0?f$(m.r26e3):'<span style="color:var(--muted)">—</span>'}</td>
+      <td class="c-min">${f$(m.minE3)}</td><td>${e3p2!=null?`<span class="mp ${pCls(e3p2)}">${e3p2}%</span>`:'—'}</td></tr>`;
+  }).join('');
+}
+
+// Tab switch
+function switchTab(btn,id){
+  document.querySelectorAll('.tpanel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.tbtn').forEach(b=>b.classList.remove('active'));
+  $('tab-'+id).classList.add('active');
+  btn.classList.add('active');
+}
+
+// Init
+refreshChips();
+render();
+</script>
+</body>
+</html>
