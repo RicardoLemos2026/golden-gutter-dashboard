@@ -194,6 +194,11 @@ tr:not(.mr2):hover td{background:rgba(255,255,255,.03);}
     </div>
   </div>
 
+  <div id="notaMeta" style="display:none;align-items:center;gap:10px;background:rgba(232,184,74,.1);border:1px solid rgba(232,184,74,.35);border-radius:8px;padding:10px 16px;margin-bottom:22px;font-size:.8rem;color:var(--amber);">
+    <span style="font-size:1.1rem;">⚡</span>
+    <span><strong>Metas proporcionais ao período:</strong> com semanas filtradas, as metas são calculadas proporcionalmente ao número de semanas selecionadas dentro de cada mês.</span>
+  </div>
+
   <div class="sec">KPIs da Empresa</div>
   <div class="kgrid">
     <div class="kcard">
@@ -507,18 +512,33 @@ function refreshChips(){
 }
 function clearFilters(){selM.clear();selW.clear();refreshChips();render();}
 
-// ─── Aggregate
+// ─── Aggregate com meta proporcional por semana
 function agg(){
   const mths=selM.size>0?D.months.filter(m=>selM.has(m.n)):D.months;
-  const rows=selW.size>0?mths.filter(m=>m.ws.some(w=>selW.has(w))):mths;
-  const s=k=>rows.reduce((acc,m)=>acc+(m[k]||0),0);
-  return{rows,
-    r26e:s('r26e'),r25e:s('r25e'),r26g:s('r26g'),r25g:s('r25g'),r26j:s('r26j'),r25j:s('r25j'),r26e3:s('r26e3'),
-    estG:s('estG'),estJ:s('estJ'),qtdG:s('qtdG'),qtdJ:s('qtdJ'),
-    minE:s('minE'),minG:s('minG'),minJ:s('minJ'),minQtdG:s('minQtdG'),minQtdJ:s('minQtdJ'),minE3:s('minE3'),
-    basE:s('basE'),basG:s('basG'),basJ:s('basJ'),basQtdG:s('basQtdG'),basQtdJ:s('basQtdJ'),basE3:s('basE3'),
-    mstE:s('mstE'),mstG:s('mstG'),mstJ:s('mstJ'),mstQtdG:s('mstQtdG'),mstQtdJ:s('mstQtdJ'),mstE3:s('mstE3'),
-    megE:s('megE'),megG:s('megG'),megJ:s('megJ'),megQtdG:s('megQtdG'),megQtdJ:s('megQtdJ'),megE3:s('megE3'),
+
+  // Para cada mês ativo, calcular fração de semanas selecionadas
+  // Se nenhuma semana selecionada → fração = 1 (mês inteiro)
+  // Se semanas selecionadas → fração = qtd semanas sel do mês / total semanas do mês
+  const activeMths = mths.map(m=>{
+    if(selW.size===0) return{m, frac:1};
+    const selCount = m.ws.filter(w=>selW.has(w)).length;
+    if(selCount===0) return null; // mês sem semanas selecionadas → excluir
+    const frac = selCount / m.ws.length;
+    return{m, frac};
+  }).filter(Boolean);
+
+  const sr  = k => activeMths.reduce((acc,{m})   => acc+(m[k]||0), 0); // soma realizados (sem proporção)
+  const sm  = k => activeMths.reduce((acc,{m,frac})=> acc+(m[k]||0)*frac, 0); // soma metas proporcionais
+
+  return{
+    rows: activeMths.map(x=>x.m),
+    r26e:sr('r26e'),r25e:sr('r25e'),r26g:sr('r26g'),r25g:sr('r25g'),
+    r26j:sr('r26j'),r25j:sr('r25j'),r26e3:sr('r26e3'),
+    estG:sr('estG'),estJ:sr('estJ'),qtdG:sr('qtdG'),qtdJ:sr('qtdJ'),
+    minE:sm('minE'),minG:sm('minG'),minJ:sm('minJ'),minQtdG:sm('minQtdG'),minQtdJ:sm('minQtdJ'),minE3:sm('minE3'),
+    basE:sm('basE'),basG:sm('basG'),basJ:sm('basJ'),basQtdG:sm('basQtdG'),basQtdJ:sm('basQtdJ'),basE3:sm('basE3'),
+    mstE:sm('mstE'),mstG:sm('mstG'),mstJ:sm('mstJ'),mstQtdG:sm('mstQtdG'),mstQtdJ:sm('mstQtdJ'),mstE3:sm('mstE3'),
+    megE:sm('megE'),megG:sm('megG'),megJ:sm('megJ'),megQtdG:sm('megQtdG'),megQtdJ:sm('megQtdJ'),megE3:sm('megE3'),
   };
 }
 
@@ -530,10 +550,22 @@ function periodLbl(){
   return s;
 }
 
+function isWeekFiltered(){ return selW.size>0; }
+
 // ─── Render
 function render(){
   const a=agg();
   $('hdrPeriod').textContent=periodLbl();
+
+  // Nota de meta proporcional
+  const notaEl=$('notaMeta');
+  if(notaEl){
+    if(isWeekFiltered()){
+      notaEl.style.display='flex';
+    } else {
+      notaEl.style.display='none';
+    }
+  }
 
   // KPIs empresa
   setK('k-fat26','k-fat-tag','k-fat-meta','k-fat-pct','k-fat-bar',a.r26e,a.minE,'meta mín: '+f$(a.minE));
